@@ -17,7 +17,7 @@ In search.py, you will implement generic search algorithms which are called by
 Pacman agents (in searchAgents.py).
 """
 
-import util
+from util import Stack
 
 class SearchProblem:
     """
@@ -87,7 +87,47 @@ def depthFirstSearch(problem):
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    #declaring stack for storing frontiers
+    frontier=Stack()
+    
+    #explored = dict()
+    explored=dict()
+
+    #stroring current state in a variable
+    position = problem.getStartState()
+    
+    vertex = {"from":None,"to":None,"current_pos":position}
+    frontier.push(vertex)
+
+    #till frontier is not empty iterate to find path
+    while not frontier.isEmpty():
+
+        #popping next vertex from frontier stack
+	vertex = frontier.pop()
+        current_pos = vertex["current_pos"]
+
+        #if already explored then go to next vertex
+	if explored.has_key(current_pos): 
+		continue
+        explored[current_pos] = True
+        
+	#if goal is reached then break loop			
+	if problem.isGoalState(current_pos): 
+		break
+        
+	#if goal not reached then see for next available paths		
+	for next_state in problem.getSuccessors(current_pos):
+            	#if this vertex is not already explored then add it to frontier
+	    	if not explored.has_key(next_state[0]):	#gives next state
+                	next_vertex = {"from":vertex,"to":next_state[1],"current_pos":next_state[0]}
+                	frontier.push(next_vertex)
+
+    #array for storing actions
+    actions=[]
+    while vertex["from"] != None:
+	actions.insert(0, vertex["to"])
+        vertex = vertex["from"]
+    return actions
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
