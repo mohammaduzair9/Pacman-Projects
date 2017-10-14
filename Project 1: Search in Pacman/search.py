@@ -18,6 +18,7 @@ Pacman agents (in searchAgents.py).
 """
 
 from util import Stack
+from util import Queue
 
 class SearchProblem:
     """
@@ -132,7 +133,47 @@ def depthFirstSearch(problem):
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    #declaring queue for storing frontiers
+    frontier=Queue()
+    
+    #explored = dict()
+    explored=dict()
+
+    #stroring current state in a variable
+    position = problem.getStartState()
+    
+    vertex = {"from":None,"to":None,"current_pos":position}
+    frontier.push(vertex)
+
+    #till frontier is not empty iterate to find path
+    while not frontier.isEmpty():
+
+        #popping next vertex from frontier queue
+	vertex = frontier.pop()
+        current_pos = vertex["current_pos"]
+
+        #if already explored then go to next vertex
+	if explored.has_key(current_pos): 
+		continue
+        explored[current_pos] = True
+        
+	#if goal is reached then break loop			
+	if problem.isGoalState(current_pos): 
+		break
+        
+	#if goal not reached then see for next available paths		
+	for next_state in problem.getSuccessors(current_pos):
+            	#if this vertex is not already explored then add it to frontier
+	    	if not explored.has_key(next_state[0]):	#gives next state
+                	next_vertex = {"from":vertex,"to":next_state[1],"current_pos":next_state[0]}
+                	frontier.push(next_vertex)
+
+    #array for storing actions
+    actions=[]
+    while vertex["from"] != None:
+        actions.insert(0, vertex["to"])
+        vertex = vertex["from"]
+    return actions
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
