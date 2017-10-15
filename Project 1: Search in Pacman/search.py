@@ -19,6 +19,7 @@ Pacman agents (in searchAgents.py).
 
 from util import Stack
 from util import Queue
+from util import PriorityQueue
 
 class SearchProblem:
     """
@@ -178,7 +179,48 @@ def breadthFirstSearch(problem):
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    #declaring priority queue for storing frontiers
+    frontier=PriorityQueue()
+    
+    #explored = dict()
+    explored=dict()
+
+    #stroring current state in a variable
+    position = problem.getStartState()
+    
+    vertex = {"from":None,"to":None,"current_pos":position,"cost":0}
+    frontier.push(vertex,vertex["cost"])
+
+    #till frontier is not empty iterate to find path
+    while not frontier.isEmpty():
+
+        #popping next vertex from frontier priority queue
+	vertex = frontier.pop()
+        current_pos = vertex["current_pos"]
+	current_cost = vertex["cost"]
+	
+        #if already explored then go to next vertex
+	if explored.has_key(current_pos): 
+		continue
+        explored[current_pos] = True
+        
+	#if goal is reached then break loop			
+	if problem.isGoalState(current_pos): 
+		break
+        
+	#if goal not reached then see for next available paths		
+	for next_state in problem.getSuccessors(current_pos):
+            	#if this vertex is not already explored then add it to frontier
+	    	if not explored.has_key(next_state[0]):	#gives next state
+                	next_vertex = {"from":vertex,"to":next_state[1],"current_pos":next_state[0],"cost":next_state[2]+current_cost}
+                	frontier.push(next_vertex,next_vertex["cost"])
+
+    #array for storing actions
+    actions=[]
+    while vertex["from"] != None:
+        actions.insert(0, vertex["to"])
+        vertex = vertex["from"]
+    return actions
 
 def nullHeuristic(state, problem=None):
     """
