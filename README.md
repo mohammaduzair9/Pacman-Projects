@@ -5,4 +5,10 @@ UC Berkeley CS188 Intro to AI -- Pacman Project Solutions
 
 ## Project 1: Search in Pacman
   1. Finding a Fixed Food Dot using Depth First Search
+  2. Breadth First Search
+  3. Varying the Cost Function
+  4. A* search
+
+
+
 
