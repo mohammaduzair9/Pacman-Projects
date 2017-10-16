@@ -8,6 +8,8 @@ UC Berkeley CS188 Intro to AI -- Pacman Project Solutions
   2. Breadth First Search
   3. Varying the Cost Function
   4. A* search
+  5. Finding All the Corners
+  6. Corners Problem: Heuristic
 
 
 
