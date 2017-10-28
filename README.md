@@ -10,6 +10,8 @@ UC Berkeley CS188 Intro to AI -- Pacman Project Solutions
   4. A* search
   5. Finding All the Corners
   6. Corners Problem: Heuristic
+  7. Eating All The Dots
+  8. Suboptimal Search
 
 
 
