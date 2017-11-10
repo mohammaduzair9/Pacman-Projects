@@ -129,40 +129,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
             Returns the total number of agents in the game
         """
         "*** YOUR CODE HERE ***"
-        #get legal moves
-    	Moves=gameState.getLegalActions(0)
-    	
-    	#result gamestate for all legal actions
-    	nextStates=[gameState.generateSuccessor(0,action) for action in Moves]
-    	
-    	#get scores from minimizer
-    	scores=[self.minimizer(0,nextState,1) for nextState in nextStates]
-    	topScore = max(scores)
-    	bestOptions = [index for index in range(len(scores)) if scores[index]==topScore]
-    	chosenIndex = random.choice(bestOptions)
-    	return Moves[chosenIndex]
-    
-    def maximizer(self,currentDepth,gameState):
-    	if(self.depth==currentDepth or gameState.isLose() or gameState.isWin()):
-    		return self.evaluationFunction(gameState)
-    	legalMoves=gameState.getLegalActions(0)
-    	resultStates=[gameState.generateSuccessor(0,action) for action in legalMoves]
-    	scores=[self.minimizer(currentDepth,state,1) for state in resultStates]
-    	return max(scores)
-    	
-    def minimizer(self,currentDepth,gameState,ghostIndex):
-    	if(self.depth==currentDepth or gameState.isLose() or gameState.isWin()):
-    		return self.evaluationFunction(gameState)
-    	
-    	
-    	legalMoves=gameState.getLegalActions(ghostIndex)
-    	resultStates=[gameState.generateSuccessor(ghostIndex, action) for action in legalMoves]
-    	
-    	if (ghostIndex>=gameState.getNumAgents()-1):
-    		scores=[self.maximizer(currentDepth+1,state) for state in resultStates]
-    	else:
-    		scores=[self.minimizer(currentDepth,state,ghostIndex+1) for state in resultStates]
-    	return min(scores)
+        util.raiseNotDefined()
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
     """
