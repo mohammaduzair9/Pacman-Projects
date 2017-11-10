@@ -238,7 +238,34 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
           legal moves.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        legalMoves=gameState.getLegalActions(0)
+    	resultStates=[gameState.generateSuccessor(0,move) for move in legalMoves]
+    	scores=[self.expecti(0,state,1) for state in resultStates]
+    	bestScore=max(scores)
+    	bestIndices=[index for index in range(len(scores)) if scores[index]==bestScore]
+    	chosenIndex=random.choice(bestIndices)
+    	return legalMoves[chosenIndex]
+
+    def expecti (self,currentDepth,gameState,ghostIndex):
+    	if(self.depth==currentDepth or gameState.isLose() or gameState.isWin()):
+    		return self.evaluationFunction(gameState)
+    	legalMoves=gameState.getLegalActions(ghostIndex)
+    	resultStates=[gameState.generateSuccessor(ghostIndex,move) for move in legalMoves]
+    	
+    	if(ghostIndex==gameState.getNumAgents()-1):
+    		scores=[self.maximizer(currentDepth+1,state) for state in resultStates]
+    	elif(ghostIndex<gameState.getNumAgents()-1):
+    		scores=[self.expecti(currentDepth,state,ghostIndex+1) for state in resultStates]
+    	
+    	return sum(scores)/len(scores)
+    	
+    def maximizer(self,currentDepth,gameState):
+    	if(self.depth==currentDepth or gameState.isLose() or gameState.isWin()):
+    		return self.evaluationFunction(gameState)
+    	legalMoves=gameState.getLegalActions(0)
+    	resultStates=[gameState.generateSuccessor(0,move) for move in legalMoves]
+    	scores=[self.expecti(currentDepth,state,1) for state in resultStates]
+    	return max(scores)
 
 def betterEvaluationFunction(currentGameState):
     """
