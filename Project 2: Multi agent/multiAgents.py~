@@ -129,7 +129,40 @@ class MinimaxAgent(MultiAgentSearchAgent):
             Returns the total number of agents in the game
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        #get legal moves
+    	Moves=gameState.getLegalActions(0)
+    	
+    	#result gamestate for all legal actions
+    	nextStates=[gameState.generateSuccessor(0,action) for action in Moves]
+    	
+    	#get scores from minimizer
+    	scores=[self.minimizer(0,nextState,1) for nextState in nextStates]
+    	topScore = max(scores)
+    	bestOptions = [index for index in range(len(scores)) if scores[index]==topScore]
+    	chosenIndex = random.choice(bestOptions)
+    	return Moves[chosenIndex]
+    
+    def maximizer(self,currentDepth,gameState):
+    	if(self.depth==currentDepth or gameState.isLose() or gameState.isWin()):
+    		return self.evaluationFunction(gameState)
+    	legalMoves=gameState.getLegalActions(0)
+    	resultStates=[gameState.generateSuccessor(0,action) for action in legalMoves]
+    	scores=[self.minimizer(currentDepth,state,1) for state in resultStates]
+    	return max(scores)
+    	
+    def minimizer(self,currentDepth,gameState,ghostIndex):
+    	if(self.depth==currentDepth or gameState.isLose() or gameState.isWin()):
+    		return self.evaluationFunction(gameState)
+    	
+    	
+    	legalMoves=gameState.getLegalActions(ghostIndex)
+    	resultStates=[gameState.generateSuccessor(ghostIndex, action) for action in legalMoves]
+    	
+    	if (ghostIndex>=gameState.getNumAgents()-1):
+    		scores=[self.maximizer(currentDepth+1,state) for state in resultStates]
+    	else:
+    		scores=[self.minimizer(currentDepth,state,ghostIndex+1) for state in resultStates]
+    	return min(scores)
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
     """
@@ -156,7 +189,60 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
           legal moves.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        def min_val(state, depth, agent, alpha, beta):
+            if agent == state.getNumAgents():
+                return max_val(state, depth + 1, 0, alpha, beta)
+
+            val = None
+            for action in state.getLegalActions(agent):
+                successor = min_val(state.generateSuccessor(agent, action), depth, agent + 1, alpha, beta)
+                val = successor if val is None else min(val, successor)
+
+                if alpha is not None and val < alpha:
+                    return val
+
+                beta = val if beta is None else min(beta, val)
+
+            if val is None:
+                return self.evaluationFunction(state)
+
+            return val
+
+        def max_val(state, depth, agent, alpha, beta):
+            assert agent == 0
+
+            if depth > self.depth:
+                return self.evaluationFunction(state)
+
+            val = None
+            for action in state.getLegalActions(agent):
+                successor = min_val(state.generateSuccessor(agent, action), depth, agent + 1, alpha, beta)
+                val = max(val, successor)
+
+                if beta is not None and val > beta:
+                    return val
+
+                alpha = max(alpha, val)
+
+            if val is None:
+                return self.evaluationFunction(state)
+
+            return val
+
+        val, alpha, beta, best = None, None, None, None
+        for action in gameState.getLegalActions(0):
+            val = max(val, min_val(gameState.generateSuccessor(0, action), 1, 1, alpha, beta))
+            # if val >= beta: return action
+            if alpha is None:
+                alpha, best = val, action
+            else:
+                alpha, best = max(val, alpha), action if val > alpha else best
+
+        return best
+
+def average(lst):
+    lst = list(lst)
+    return sum(lst) / len(lst)
 
 def betterEvaluationFunction(currentGameState):
     """
