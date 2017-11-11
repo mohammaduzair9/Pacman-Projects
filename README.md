@@ -14,5 +14,10 @@ UC Berkeley CS188 Intro to AI -- Pacman Project Solutions
   8. Suboptimal Search
 
 
+## Project 2: Multi agent
+  2. Minimax
+  3. Alpha-Beta Pruning
+  4. Expectimax
+
 
 
